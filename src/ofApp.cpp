@@ -6,8 +6,15 @@ void ofApp::setup(){
     std::cout << "Window Width: " << ofGetWindowWidth() << "   Window Height: " << ofGetWindowHeight() << endl;
     newAgent.build(boxWidth, boxHeight, boxDepth);
     
+    
     box.set(boxWidth, boxHeight, boxDepth, resolution, resolution, resolution);
-    box.pan(30); // roating the box 20 degrees to the right
+    box.setPosition(ofGetWindowWidth()/2, ofGetWindowHeight()/2, 0);
+    box.pan(30); // roating the box 30 degrees to the right (on an angle)
+    
+    std::cout << "---------------" << endl;
+    std::cout << "Box Centre Axis: " << box.getPosition() << endl;
+    std::cout << "Box Global Transform Matrix: " << box.getGlobalTransformMatrix() << endl;
+
     
     
 }
@@ -26,10 +33,14 @@ void ofApp::update(){
 void ofApp::draw(){
     // newAgent.draw();
     
-    box.setPosition(ofGetWindowWidth()/2, ofGetWindowHeight()/2, 100);
+    
     
     box.drawWireframe();
     box.drawAxes(10);
+    
+    
+    
+    
 }
 
 

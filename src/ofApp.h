@@ -89,7 +89,7 @@ class ofApp : public ofBaseApp{
     float boxDepth = 300;
     
     int resolution = 1;  // how many points are used to create shape
-    
+
     
     Agent newAgent;
 		
