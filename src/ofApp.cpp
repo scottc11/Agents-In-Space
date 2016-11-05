@@ -38,12 +38,13 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    
     newAgent.draw();
     
     
-    
-    // box.drawWireframe();
-    // box.drawAxes(10);
+    ofSetColor(0);
+    box.drawWireframe();
+    box.drawAxes(10);
     
     
     
@@ -63,6 +64,9 @@ void Agent::build(int x, int y, int z) {
     containerSizeY = y;
     containerSizeZ = z;
     
+    noiseStrength = ofRandom(20, 60);
+    noiseScale = ofRandom(100, 150);
+    
     position.set(ofGetWindowWidth()/2, ofGetWindowHeight()/2, 0);
     // setRandomPosition(containerSizeX, containerSizeY, containerSizeZ);
     
@@ -75,17 +79,21 @@ void Agent::build(int x, int y, int z) {
     
     std::cout << "Position: " << position << endl;
     std::cout << "StepSize: " << stepSize << endl;
+    std::cout << "NoiseStrength: " << noiseStrength << endl;
+    std::cout << "NoiseScale: " << noiseScale << endl;
 }
 
 
 void Agent::update() {
     
+    
     angleY = ofNoise(position.x / noiseScale, position.y / noiseScale, position.z / noiseScale) * noiseStrength;
-    //
+    
+    
     // a second, random angle is needed for an agent to move in all three dimensions.
-    // To produce this agnle, the point at which the random number is selected is simply
+    // To produce this angle, the point at which the random number is selected is simply
     // shifted by the value of 'offset'
-    //
+    
     angleZ = ofNoise( (position.x / noiseScale) + offset, position.y / noiseScale, position.z / noiseScale) * noiseStrength;
     
     
@@ -138,11 +146,6 @@ void Ribbon3d::build(ofVec3f _position, int _count) {
     positionArray.resize(count); // init array with predifined size (count is size)
     isGapArray.resize(count); // init array with predifined size (count is size)
     
-    // declare the location for every ofVec3f point in the ribbon
-    for (int i = 0; i < count; i++) {
-        positionArray[i] = ofVec3f(_position.x, _position.y, _position.z);
-        isGapArray[i] = false;
-    }
     
 }
 
@@ -153,14 +156,10 @@ void Ribbon3d::build(ofVec3f _position, int _count) {
 
 void Ribbon3d::update(ofVec3f _position, bool _isGap) {
     
-    /*
-    for (int i = count-1; i > 0; i--) {
-        
-        positionArray[i].set(positionArray[i-1]);// setting the ofVec3f object to previous one
-        
-        isGapArray[i] = isGapArray[i-1];
-    }
-    */
+    line.addVertex(_position);
+    
+    
+    // when line gets bigger than count, delete the first/end point of the line
     
     if (line.size() > count){
         line.getVertices().erase(
@@ -168,8 +167,7 @@ void Ribbon3d::update(ofVec3f _position, bool _isGap) {
                                  );
     }
     
-    // setting new value to beggining of array
-    positionArray[0].set(_position);
+    
     isGapArray[0] = _isGap;
 }
 
@@ -179,12 +177,6 @@ void Ribbon3d::update(ofVec3f _position, bool _isGap) {
 
 void Ribbon3d::drawLineRibbon(ofColor _strokeColor, float _width) {
     
-    for (int i = 0; i < count; i++) {
-        line.addVertex(positionArray[i]);  // add a point to the end of the line from positionsArray
-        if (isGapArray[i] == true) {
-            line.clear();  // if a point is outside the container, delete all points in line and start again
-        }
-    }
     ofSetColor(_strokeColor);
     ofFill();
     line.draw();  // draw the line

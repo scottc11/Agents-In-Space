@@ -44,9 +44,9 @@ public:
     void draw();
     void setRandomPosition(int x, int y, int z);
     
-    // PRESET VARIABLES which alter the sketch based on their values
-    float noiseStrength = 20;
-    float noiseScale = 150;
+    // PRESET VARIABLES which alter the agent  based on their values
+    float noiseStrength;  // sketch default 20
+    float noiseScale;  // sketch default: 150
     
     // the same as spazeSize variable in ofApp variable decloration
     int containerSizeX;
@@ -79,6 +79,9 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
 
+    
+    
+    
     
     // ofBoxPrimitive to contain the agents being drawn.
     
