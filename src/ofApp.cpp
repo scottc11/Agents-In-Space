@@ -2,10 +2,16 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    
     ofBackground(77);
+    
+    ofEnableDepthTest();
+    
     std::cout << "Window Width: " << ofGetWindowWidth() << "   Window Height: " << ofGetWindowHeight() << endl;
     newAgent.build(boxWidth, boxHeight, boxDepth);
     
+    
+    // Creating the container/box
     
     box.set(boxWidth, boxHeight, boxDepth, resolution, resolution, resolution);
     box.setPosition(ofGetWindowWidth()/2, ofGetWindowHeight()/2, 0);
@@ -13,7 +19,8 @@ void ofApp::setup(){
     
     std::cout << "---------------" << endl;
     std::cout << "Box Centre Axis: " << box.getPosition() << endl;
-    std::cout << "Box Global Transform Matrix: " << box.getGlobalTransformMatrix() << endl;
+    std::cout << "Box Size: " << box.getSize() << endl;
+    std::cout << "Box Global Transform Matrix: " << &box.getMesh() << endl;
 
     
     
@@ -22,7 +29,7 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    // newAgent.update();
+    newAgent.update();
     
     
     
@@ -31,12 +38,12 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    // newAgent.draw();
+    newAgent.draw();
     
     
     
-    box.drawWireframe();
-    box.drawAxes(10);
+    // box.drawWireframe();
+    // box.drawAxes(10);
     
     
     
@@ -56,11 +63,11 @@ void Agent::build(int x, int y, int z) {
     containerSizeY = y;
     containerSizeZ = z;
     
-    position.set(0, 0, 0);
-    setRandomPosition(containerSizeX, containerSizeY, containerSizeZ);
+    position.set(ofGetWindowWidth()/2, ofGetWindowHeight()/2, 0);
+    // setRandomPosition(containerSizeX, containerSizeY, containerSizeZ);
     
     offset = 10; // use to be set at 10000
-    stepSize = ofRandom(1, 8);
+    // stepSize = ofRandom(1, 8);
     
     ribbon.build(position, int(ofRandom(50, 150)) ); // may have to change this random deleration from int to float. is expecting int
     
@@ -89,13 +96,15 @@ void Agent::update() {
     
     
     // checking to see if agent is outside of the given container dimensions (not window)
+    /*
     if (position.x<0 || position.x>containerSizeX ||
         position.y<0 || position.y>containerSizeY ||
-        position.z<0 || position.z>containerSizeZ) {
+        position.z<0 || position.z>containerSizeZ ) {
         
         setRandomPosition(containerSizeX, containerSizeY, containerSizeZ);
         isOutside = true;
     }
+    */
     
     ribbon.update(position, isOutside);
     isOutside = false;
@@ -104,7 +113,7 @@ void Agent::update() {
 
 
 void Agent::draw() {
-    ribbon.drawLineRibbon(ofColor(0, 0, 0), 2.0);
+    ribbon.drawLineRibbon(ofColor(255), 2.0);
 }
 
 
@@ -112,6 +121,8 @@ void Agent::setRandomPosition(int x, int y, int z) {
     position.set(ofRandom(0, x), ofRandom(0, y), ofRandom(0, z));
     
 }
+
+
 
 
 
@@ -141,12 +152,23 @@ void Ribbon3d::build(ofVec3f _position, int _count) {
 // room for the new value.  In doing this, the oldest value is overwritten / erased
 
 void Ribbon3d::update(ofVec3f _position, bool _isGap) {
+    
+    /*
     for (int i = count-1; i > 0; i--) {
+        
         positionArray[i].set(positionArray[i-1]);// setting the ofVec3f object to previous one
+        
         isGapArray[i] = isGapArray[i-1];
     }
+    */
     
-    // setting new value top beggining of array
+    if (line.size() > count){
+        line.getVertices().erase(
+                                 line.getVertices().begin()
+                                 );
+    }
+    
+    // setting new value to beggining of array
     positionArray[0].set(_position);
     isGapArray[0] = _isGap;
 }

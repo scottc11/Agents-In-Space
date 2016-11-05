@@ -7,6 +7,13 @@
 //          RIBBON CLASS
 //--------------------------------------------------------------
 
+// each 'ribbon' has a certain size/length to it, which is determined by
+// the 'count' variable.  Each time a new ribbon is intantiated, the 'count'
+// variable is randomized.
+// the 'count' variable effects the length/size of the two arrays within the
+// ribbon class (ie. 'isGapArray', 'positionArray')
+
+
 class Ribbon3d {
 public:
     void build(ofVec3f _position, int _count);
@@ -19,13 +26,6 @@ public:
     vector <bool> isGapArray;
     
     ofPolyline line;
-    
-    // each 'ribbon' has a certain size/length to it, which is determined by
-    // the 'count' variable.  Each time a new ribbon is intantiated, the 'count'
-    // variable is randomized.
-    // the 'count' variable effects the length/size of the two arrays within the
-    // ribbon class (ie. 'isGapArray', 'positionArray')
-    
     
 };
 
@@ -57,7 +57,7 @@ public:
     ofVec3f position;
     
     float offset;
-    float stepSize;
+    float stepSize = 2; // how fast things happen
     float angleY;
     float angleZ; // random angle needed for agent to move in 3 dimensions
     
