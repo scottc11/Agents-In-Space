@@ -19,6 +19,7 @@ public:
     void build(ofVec3f _position, int _count);
     void update(ofVec3f _position, bool _isGap);
     void drawLineRibbon(ofColor _strokeColor, float _width);
+    void clear();
     
     
     int count; // how many previous positions are saved to arrays
@@ -40,18 +41,19 @@ public:
 class Agent {
 public:
     void update();
-    void build(int x, int y, int z);
+    void build(int _width, int _height, int _depth, ofVec3f _origin);
     void draw();
-    void setRandomPosition(int x, int y, int z);
+    void setRandomPosition();
     
     // PRESET VARIABLES which alter the agent  based on their values
     float noiseStrength;  // sketch default 20
     float noiseScale;  // sketch default: 150
     
-    // the same as spazeSize variable in ofApp variable decloration
-    int containerSizeX;
-    int containerSizeY;
-    int containerSizeZ;
+    // the same as box size variables in ofApp variable decloration
+    int containerWidth;
+    int containerHeight;
+    int containerDepth;
+    ofVec3f containerOrigin;
     
     bool isOutside = false;
     ofVec3f position;
@@ -86,6 +88,7 @@ class ofApp : public ofBaseApp{
     // ofBoxPrimitive to contain the agents being drawn.
     
     ofBoxPrimitive box;
+    
     
     float boxWidth = 300;
     float boxHeight = 400;

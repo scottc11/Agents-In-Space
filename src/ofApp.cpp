@@ -8,15 +8,18 @@ void ofApp::setup(){
     ofEnableDepthTest();
     
     std::cout << "Window Width: " << ofGetWindowWidth() << "   Window Height: " << ofGetWindowHeight() << endl;
-    newAgent.build(boxWidth, boxHeight, boxDepth);
     
     
     
     
-    // Creating the container/box
     
+    // CREATING CONTAINING BOX
+    
+    // size
     box.set(boxWidth, boxHeight, boxDepth, resolution, resolution, resolution);
+    // center position
     box.setPosition(ofGetWindowWidth()/2, ofGetWindowHeight()/2, 0);
+    // angle box in 3d space
     box.pan(30); // roating the box 30 degrees to the right (on an angle)
     
     std::cout << "---------------" << endl;
@@ -29,7 +32,7 @@ void ofApp::setup(){
     
     for (int i = 0; i < maxAgents; i++) {
         Agent agent;
-        agent.build(boxWidth, boxHeight, boxDepth);
+        agent.build(boxWidth, boxHeight, boxDepth, box.getPosition());
         agents.push_back(agent);
     }
     
@@ -71,11 +74,12 @@ void ofApp::draw(){
 //          AGENT CLASS
 //--------------------------------------------------------------
 
-void Agent::build(int x, int y, int z) {
+void Agent::build(int _width, int _height, int _depth, ofVec3f _origin) {
     
-    containerSizeX = x;
-    containerSizeY = y;
-    containerSizeZ = z;
+    containerWidth = _width;
+    containerHeight = _height;
+    containerDepth = _depth;
+    containerOrigin = _origin;
     
     noiseStrength = ofRandom(20, 60);
     noiseScale = ofRandom(100, 150);
@@ -94,7 +98,7 @@ void Agent::build(int x, int y, int z) {
     std::cout << "StepSize: " << stepSize << endl;
     std::cout << "NoiseStrength: " << noiseStrength << endl;
     std::cout << "NoiseScale: " << noiseScale << endl;
-    std::cout << "-----------------" << endl;
+    
 }
 
 
@@ -118,15 +122,18 @@ void Agent::update() {
     
     
     // checking to see if agent is outside of the given container dimensions (not window)
-    /*
-    if (position.x<0 || position.x>containerSizeX ||
-        position.y<0 || position.y>containerSizeY ||
-        position.z<0 || position.z>containerSizeZ ) {
+    
+    if (position.x < containerOrigin.x - containerWidth/2 || position.x > containerOrigin.x + containerWidth/2 ||
+        position.y < containerOrigin.y - containerHeight/2 || position.y > containerOrigin.y + containerHeight/2 ||
+        position.z < containerOrigin.z - containerDepth/2 || position.z > containerOrigin.z + containerDepth/2 ) {
         
-        setRandomPosition(containerSizeX, containerSizeY, containerSizeZ);
+        
+        setRandomPosition();
+        ribbon.clear();
         isOutside = true;
+        
     }
-    */
+    
     
     ribbon.update(position, isOutside);
     isOutside = false;
@@ -139,9 +146,13 @@ void Agent::draw() {
 }
 
 
-void Agent::setRandomPosition(int x, int y, int z) {
-    position.set(ofRandom(0, x), ofRandom(0, y), ofRandom(0, z));
+void Agent::setRandomPosition() {
     
+    position.set(
+                 ofRandom(containerOrigin.x - containerWidth/2, containerOrigin.x + containerWidth/2),
+                 ofRandom(containerOrigin.y - containerHeight/2, containerOrigin.y + containerHeight/2),
+                 ofRandom(containerOrigin.z - containerDepth/2, containerOrigin.z + containerDepth/2)
+            );
 }
 
 
@@ -185,6 +196,10 @@ void Ribbon3d::update(ofVec3f _position, bool _isGap) {
     isGapArray[0] = _isGap;
 }
 
+
+void Ribbon3d::clear() {
+    line.clear();
+}
 
 
 // DRAWING THE RIBBON
