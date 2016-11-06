@@ -44,9 +44,9 @@ public:
     void draw();
     void setRandomPosition(int x, int y, int z);
     
-    // PRESET VARIABLES which alter the sketch based on their values
-    float noiseStrength = 20;
-    float noiseScale = 150;
+    // PRESET VARIABLES which alter the agent  based on their values
+    float noiseStrength;  // sketch default 20
+    float noiseScale;  // sketch default: 150
     
     // the same as spazeSize variable in ofApp variable decloration
     int containerSizeX;
@@ -57,7 +57,7 @@ public:
     ofVec3f position;
     
     float offset;
-    float stepSize = 2; // how fast things happen
+    float stepSize = 1; // how fast things happen
     float angleY;
     float angleZ; // random angle needed for agent to move in 3 dimensions
     
@@ -80,6 +80,9 @@ class ofApp : public ofBaseApp{
 		void draw();
 
     
+    
+    
+    
     // ofBoxPrimitive to contain the agents being drawn.
     
     ofBoxPrimitive box;
@@ -89,8 +92,10 @@ class ofApp : public ofBaseApp{
     float boxDepth = 300;
     
     int resolution = 1;  // how many points are used to create shape
-
     
+    // AGENTS
+    int maxAgents = 30;
+    vector <Agent> agents;
     Agent newAgent;
 		
 };
