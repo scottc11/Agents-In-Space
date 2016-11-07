@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    ofBackground(77);
+    ofBackground(background);
     
     ofEnableDepthTest();
     
@@ -21,11 +21,25 @@ void ofApp::setup(){
     box.setPosition(ofGetWindowWidth()/2, ofGetWindowHeight()/2, 0);
     // angle box in 3d space
     box.pan(30); // roating the box 30 degrees to the right (on an angle)
+    box.enableColors();
+    
+    
+    // CREATING THE MESH (via the containing box primitive)
+    mesh.clear();
+    
+    mesh = box.getMesh();
+    vector <ofVec3f> meshVector = mesh.getVertices();
+    
+    
     
     std::cout << "---------------" << endl;
     std::cout << "Box Centre Axis: " << box.getPosition() << endl;
     std::cout << "Box Size: " << box.getSize() << endl;
-    std::cout << "Box Global Transform Matrix: " << &box.getMesh() << endl;
+    
+    std::cout << "---------------" << endl;
+    std::cout << "Mesh Vector Size: " << mesh.getNumVertices() << endl;
+    std::cout << "Mesh Centre: " << mesh.getCentroid() << endl;
+    std::cout << "Mesh Centre: " << meshVector[1] << endl;
 
     
     // buiding a collection of Agent classes
@@ -57,9 +71,10 @@ void ofApp::draw(){
         agents[i].draw();
     }
     
-    
     ofSetColor(0);
     box.drawWireframe();
+    ofSetColor(0, 0, 0, 30);
+    box.draw();
     box.drawAxes(10);
     
     
@@ -82,7 +97,7 @@ void Agent::build(int _width, int _height, int _depth, ofVec3f _origin) {
     containerOrigin = _origin;
     
     noiseStrength = ofRandom(20, 60);
-    noiseScale = ofRandom(100, 150);
+    noiseScale = ofRandom(80, 150);
     
     position.set(ofGetWindowWidth()/2, ofGetWindowHeight()/2, 0);
     // setRandomPosition(containerSizeX, containerSizeY, containerSizeZ);
@@ -92,12 +107,13 @@ void Agent::build(int _width, int _height, int _depth, ofVec3f _origin) {
     
     ribbon.build(position, int(ofRandom(50, 150)) ); // may have to change this random deleration from int to float. is expecting int
     
-    
+    /*
     std::cout << "-----------------" << endl;
     std::cout << "Position: " << position << endl;
     std::cout << "StepSize: " << stepSize << endl;
     std::cout << "NoiseStrength: " << noiseStrength << endl;
     std::cout << "NoiseScale: " << noiseScale << endl;
+    */
     
 }
 
@@ -206,7 +222,7 @@ void Ribbon3d::clear() {
 
 void Ribbon3d::drawLineRibbon(ofColor _strokeColor, float _width) {
     
-    ofSetColor(_strokeColor);
+    ofSetColor(ribbonColor);
     ofFill();
     line.draw();  // draw the line
 }

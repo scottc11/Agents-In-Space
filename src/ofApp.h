@@ -21,7 +21,7 @@ public:
     void drawLineRibbon(ofColor _strokeColor, float _width);
     void clear();
     
-    
+    ofColor ribbonColor = ofColor(0);
     int count; // how many previous positions are saved to arrays
     vector <ofVec3f> positionArray;
     vector <bool> isGapArray;
@@ -84,16 +84,17 @@ class ofApp : public ofBaseApp{
     
     
     
+    // GLOBALS
+    ofColor background = ofColor(255);
+    
+    // The Mesh
+    ofVboMesh mesh;
     
     // ofBoxPrimitive to contain the agents being drawn.
-    
     ofBoxPrimitive box;
-    
-    
     float boxWidth = 300;
     float boxHeight = 400;
     float boxDepth = 300;
-    
     int resolution = 1;  // how many points are used to create shape
     
     // AGENTS
